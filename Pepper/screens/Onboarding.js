@@ -7,13 +7,23 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import React, { useEffect, useState} from 'react';
+import { useEffect, useState} from 'react';
 import { validateEmail } from '../helper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Onboarding() {
+export default function Onboarding({ navigation }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [client, setClient] = useState({name: "", email: ""});
     const isEmailValid = validateEmail(email);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                await AsyncStorage.setItem('client', JSON.stringify(client));
+            } catch (e) {}
+        })();
+    }, [client]);
 
     return (
         <View style={styles.container} keyboardDismissMode='on-drag'>
@@ -47,7 +57,10 @@ export default function Onboarding() {
                     <Pressable             
                         disabled={!(isEmailValid && name)}
                         style={(isEmailValid && name) ? styles.button : styles.buttonDisabeled}
-                        onPress={() => Alert.alert(`Thanks for subscribing, ${name}!`)} //{() => navigation.navigate('')}
+                        onPress={() => {
+                            setClient({name: name, email: email});
+                            navigation.navigate('Home')
+                        }}
                     >
                     <Text style={styles.buttonText}>Next</Text>
                     </Pressable>

@@ -1,19 +1,44 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Header from './components/Header';
-import Onboarding from './screens/ Onboarding';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import LogedInNavigator from './navigators/LogedInNavigator';
+import NotLogedNavigator from './navigators/NotLogedNavigator';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState, useEffect } from 'react';
 
      // <StatusBar style="auto" />
+
 export default function App() {
+  const [state, setState] = useState({isOnboardingCompleted: false});
+
+  useEffect(() => {
+    (async () => {
+        try {
+            const customers = await AsyncStorage.getItem('client');
+            setState(customers === null ? {isOnboardingCompleted: false} : {isOnboardingCompleted: true});
+        } catch (e) {}
+    })();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Header/>
-      <View style={styles.containerMain}>
-        <Onboarding/>
-        <Text style={styles.text}>💩</Text>
-        <Text style={styles.text}>Alberts</Text>
-      </View>
-    </View>
+    <NavigationContainer>
+      {state.isOnboardingCompleted ? (
+        <LogedInNavigator/>
+        ) : (
+        <NotLogedNavigator/>
+      )}
+      
+        {/* <View style={styles.container}>
+          <Header/>
+          <View style={styles.containerMain}>
+            <Onboarding/>
+            <Text style={styles.text}>💩</Text>
+            <Text style={styles.text}>Alberts</Text>
+          </View>
+        </View> */}
+
+    </NavigationContainer>
   );
 }
 

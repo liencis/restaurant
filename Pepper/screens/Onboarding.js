@@ -14,7 +14,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Onboarding({ navigation }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [client, setClient] = useState({name: "", email: ""});
+    const [client, setClient] = useState(
+        {
+            name: "", 
+            email: "", 
+            phone: "", 
+            lastName: "",
+            uriImage: "",
+        }
+    );
     const isEmailValid = validateEmail(email);
 
     useEffect(() => {
@@ -58,7 +66,7 @@ export default function Onboarding({ navigation }) {
                         disabled={!(isEmailValid && name)}
                         style={(isEmailValid && name) ? styles.button : styles.buttonDisabeled}
                         onPress={() => {
-                            setClient({name: name, email: email});
+                            setClient((prevState) => ({...prevState, name: name, email: email}));
                             navigation.navigate('Home')
                         }}
                     >

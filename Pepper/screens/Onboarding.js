@@ -67,7 +67,7 @@ export default function Onboarding({ navigation }) {
                         style={(isEmailValid && name) ? styles.button : styles.buttonDisabeled}
                         onPress={() => {
                             setClient((prevState) => ({...prevState, name: name, email: email}));
-                            navigation.navigate('Home')
+                            navigation.navigate('Profile')
                         }}
                     >
                     <Text style={styles.buttonText}>Next</Text>

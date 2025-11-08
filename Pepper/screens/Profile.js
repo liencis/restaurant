@@ -88,6 +88,11 @@ export default function ProfileScreen({ navigation }) {
     const saveChages = () => {
         (async () => {
             try {
+                if (client.phone !== "") {
+                    if (validatePhoneNumber(client.phone) === false) {
+                        throw "Phone number is invalid. Insert valid number or leave field empty."
+                    }
+                }
                 await AsyncStorage.setItem('clientPref', JSON.stringify(clientPref));
                 await AsyncStorage.setItem('client', JSON.stringify(client));
                 setInfoIsChanged(false);

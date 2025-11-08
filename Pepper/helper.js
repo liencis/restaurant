@@ -5,7 +5,7 @@ export const validateEmail = (email) => {
 };
 
 export const validatePhoneNumber = (number) => {
-  const reg = /^[0]?[789]\d{9}$/;
+  const reg = /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/; // /^[0]?[789]\d{9}$/;
   return reg.test(number);
 };
 

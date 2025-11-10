@@ -9,7 +9,7 @@ const Stack = createNativeStackNavigator();
 
 export default function LogedInNavigator ({ navigation }) {
   return (
-    <Stack.Navigator initialRouteName='Profile'>
+    <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen name="Home" component={HomeScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>
         <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>
         <Stack.Screen name="Welcome" component={WelcomeScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>

@@ -1,88 +1,223 @@
+import { StatusBar } from 'expo-status-bar';
 import { 
   StyleSheet, 
   Text, 
   View,
-  TextInput,
-  ScrollView,
-  Pressable,
-  Alert,
+  ActivityIndicator,
+  FlatList,
+  SectionList,
+  Image,
 } from 'react-native';
-import { useEffect, useState} from 'react';
-import { validateEmail } from '../helper';
+import React, { useEffect, useState} from 'react';
+import { getSectionListData } from "../helper";
+
+const MENU_API = "https://raw.githubusercontent.com/liencis/files-to-change/refs/heads/main/lemon-menu.js"
+
+const sections = ['Appetizers', 'Salads', 'Beverages', 'Mains'];
+
+const Item = ({ title, description, price }) => (
+  <View style={styles.item}>
+    <Text style={styles.title}>{title}</Text>
+    <Text style={styles.description}>{description}</Text>
+    <Text style={styles.title}>${price}</Text>
+  </View>
+);
 
 export default function HomeScreen() {
-    return (
-        <View style={styles.container} keyboardDismissMode='on-drag'>
+  const [data, setData] = useState([]);
+  const [searchBarText, setSearchBarText] = useState('');
+  const [query, setQuery] = useState('');
+  const [filterSelections, setFilterSelections] = useState(
+    sections.map(() => false)
+  );
 
-            <Text style={styles.text}>Home Page</Text>
-            
-            <ScrollView keyboardDismissMode="on-drag">
+  const fetchData = async() => {
 
-            </ScrollView>
+    // Fetch the menu from the MENU_API endpoint. You can visit the MENU_API in your browser to inspect the data returned
+    try {
+      const response = await fetch(MENU_API);
+      const returnList = await response.json();
+      return returnList
+    } catch (e) {console.error(e)}; 
+  }
 
+  useEffect(() => {
+    (async () => {
+      try {
+        // await createTable();
+        // let menuItems = await getMenuItems();
+
+        // // The application only fetches the menu data once from a remote URL
+        // // and then stores it into a SQLite database.
+        // // After that, every application restart loads the menu from the database
+        // if (!menuItems.length) {
+        //   const menuItems = await fetchData();
+        //   saveMenuItems(menuItems);
+        // }
+
+        // const sectionListData = getSectionListData(menuItems);
+        // setData(sectionListData);
+        const menuItems = await fetchData();
+        const sectionListData = getSectionListData(menuItems.menu);
+        console.log(typeof(sectionListData))
+        setData(sectionListData);
+      } catch (e) {
+        // Handle error
+        Alert.alert(e.message);
+      }
+    })();
+  }, []);
+
+  // useUpdateEffect(() => {
+  //   (async () => {
+  //     const activeCategories = sections.filter((s, i) => {
+  //       // If all filters are deselected, all categories are active
+  //       if (filterSelections.every((item) => item === false)) {
+  //         return true;
+  //       }
+  //       return filterSelections[i];
+  //     });
+  //     try {
+  //       const menuItems = await filterByQueryAndCategories(
+  //         query,
+  //         activeCategories
+  //       );
+  //       const sectionListData = getSectionListData(menuItems);
+  //       setData(sectionListData);
+  //     } catch (e) {
+  //       Alert.alert(e.message);
+  //     }
+  //   })();
+  // }, [filterSelections, query]);
+
+  // const lookup = useCallback((q) => {
+  //   setQuery(q);
+  // }, []);
+
+  // const debouncedLookup = useMemo(() => debounce(lookup, 500), [lookup]);
+
+  // const handleSearchChange = (text) => {
+  //   setSearchBarText(text);
+  //   debouncedLookup(text);
+  // };
+
+  const handleFiltersChange = async (index) => {
+    const arrayCopy = [...filterSelections];
+    arrayCopy[index] = !filterSelections[index];
+    setFilterSelections(arrayCopy);
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.banner}>
+        <Text style={styles.bannerHeader}>Little Lemon</Text>
+        <Text style={styles.bannerSubHeader}>Chicago</Text>
+        <View style={styles.bannerView}>
+          <Text style={styles.bannerText}>We  are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
+          <Image
+            source={require('../assets/Hero image.png')}
+            style={styles.bannerImg}
+            resizeMode="cover"
+          />
         </View>
-    );
+      </View>
+      {/* <Searchbar
+        placeholder="Search"
+        placeholderTextColor="white"
+        onChangeText={handleSearchChange}
+        value={searchBarText}
+        style={styles.searchBar}
+        iconColor="white"
+        inputStyle={{ color: 'white' }}
+        elevation={0}
+      />
+      <Filters
+        selections={filterSelections}
+        onChange={handleFiltersChange}
+        sections={sections}
+      /> */}
+      <SectionList
+        style={styles.sectionList}
+        sections={data}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <Item title={item.title} description={item.description} price={item.price}/>
+        )}
+        renderSectionHeader={({ section: { title } }) => (
+          <Text style={styles.header}>{title}</Text>
+        )}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "stretch",
-        textAlign: "center",
-        backgroundColor: '#ffffffff',
-        position: "relative",
-        width: "100%",
-    },
-    text: {
-        fontSize: 36,
-        textAlign: "center",
-        color: '#495E57',
-        fontWeight: "bold",
-        padding: 20,
-    },
-    inputView: {
-        alignItems: "stretch",
-        marginBottom: 10,
-    },
-    inputText: {
-        paddingLeft: 15,
-        color: '#495E57',
-    },
-    input: {
-        height: 43,
-        margin: 10,
-        borderWidth: 2,
-        padding: 10,
-        fontSize: 16,
-        borderColor: '#495E57',
-        backgroundColor: '#ffffffff',
-        borderRadius: 10,
-    },
-    buttonView: {
-        alignItems: "flex-end",
-    },
-    buttonText: {
-      textAlign: 'center',
-      color: '#ffffffff',
-    },
-    button: {
-      fontSize: 22,
-      padding: 10,
-      marginVertical: 8,
-      margin: 20,
-      height: 40,
-      width: 160,
-      backgroundColor: '#495E57',
-      borderRadius: 12,
-    },
-    buttonDisabeled: {
-        fontSize: 22,
-        padding: 10,
-        marginVertical: 8,
-        margin: 20,
-        height: 40,
-        width: 160,
-        backgroundColor: '#d7d7d7ff',
-        borderRadius: 10,
-    },
+  container: {
+    flex: 1,
+    // paddingTop: StatusBar.currentHeight,
+    backgroundColor: '#ffffffff',
+    //paddingTop: 40,
+  },
+  banner: {
+    backgroundColor: '#495E57',
+  },
+  bannerHeader: {
+    color: "#F4CE14",
+    fontSize: 56,
+    fontFamily: "MarkaziText",
+    paddingHorizontal: 8,
+  },
+  bannerSubHeader: {
+    color: "#EDEFEE",
+    fontSize: 40,
+    fontFamily: "MarkaziText",
+    paddingHorizontal: 8,
+  },
+  bannerView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  bannerText: {
+    width: 220,
+    overflow: "scroll",
+    color: "#EDEFEE",
+    padding: 8,
+    fontSize: 16,
+    fontFamily: "Karla-Regular",
+  },
+  bannerImg: {
+    verticalAlign: "middle",
+    height: 130, 
+    width: 130, 
+    margin: 10,
+    borderRadius: 12,
+  },
+  sectionList: {
+    paddingHorizontal: 16,
+  },
+  searchBar: {
+    marginBottom: 24,
+    backgroundColor: '#495E57',
+    shadowRadius: 0,
+    shadowOpacity: 0,
+  },
+  item: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+  },
+  header: {
+    fontSize: 24,
+    paddingVertical: 8,
+    color: '#495E57',
+    backgroundColor: '#ffffffff',
+    borderBottomColor: '#EDEFEE',
+    borderBottomWidth: 2,
+  },
+  title: {
+    fontSize: 20,
+    color: '#333333',
+  },
 });

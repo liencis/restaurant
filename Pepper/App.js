@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState, useEffect } from 'react';
+import { useFonts } from "expo-font";
 
      // <StatusBar style="auto" />
 
@@ -20,6 +21,13 @@ export default function App() {
         } catch (e) {}
     })();
   }, []);
+
+  const [fontsLoaded, fontError] = useFonts({
+    "MarkaziText": require("./assets/fonts/MarkaziText-Medium.ttf"),
+    "Karla-ExtraBold": require("./assets/fonts/Karla-ExtraBold.ttf"),
+    "Karla-Medium": require("./assets/fonts/Karla-Medium.ttf"),
+    "Karla-Regular": require("./assets/fonts/Karla-Regular.ttf"),
+  });
 
   return (
     <NavigationContainer>

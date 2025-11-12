@@ -57,11 +57,9 @@ export function getSectionListData(data) {
   // Each item has the following properties: "id", "title" and "price"
   let sectionListData = [
     {title: 'Appetizers', data: []}, 
-    {title: 'Salads', data: []}, 
-    {title: 'Beverages', data: []}
+    {title: 'Salads', data: []},
   ];
 
-  console.log(">>>", data);
   for (let i = 0; i < data.length; i++) {;
     const data_o = data[i];
     var dataAdded = false;
@@ -79,11 +77,10 @@ export function getSectionListData(data) {
       }
     }  
     if (!dataAdded) {
-      console.log(">", data_o);
       sectionListData = [...sectionListData, 
         {title: data_o.category, 
           data: [{id: data_o.id, 
-            title: data_o.title, 
+            title: data_o.title,
             price: data_o.price,
             description: data_o.description,
             image: data_o.image,

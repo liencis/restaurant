@@ -18,7 +18,7 @@ export default function App() {
         try {
             const customers = await AsyncStorage.getItem('client');
             setState(customers === null ? {isOnboardingCompleted: false} : {isOnboardingCompleted: true});
-        } catch (e) {}
+          } catch (e) {}
     })();
   }, []);
 

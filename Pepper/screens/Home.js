@@ -8,20 +8,19 @@ import {
   SectionList,
   Image,
 } from 'react-native';
+import {
+  createTable,
+  getMenuItems,
+  saveMenuItems,
+  filterByQueryAndCategories,
+} from '../database';
 import React, { useEffect, useState} from 'react';
 import { getSectionListData } from "../helper";
+import Item from '../components/Item';
 
 const MENU_API = "https://raw.githubusercontent.com/liencis/files-to-change/refs/heads/main/lemon-menu.js"
 
 const sections = ['Appetizers', 'Salads', 'Beverages', 'Mains'];
-
-const Item = ({ title, description, price }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-    <Text style={styles.description}>{description}</Text>
-    <Text style={styles.title}>${price}</Text>
-  </View>
-);
 
 export default function HomeScreen() {
   const [data, setData] = useState([]);
@@ -44,22 +43,19 @@ export default function HomeScreen() {
   useEffect(() => {
     (async () => {
       try {
-        // await createTable();
-        // let menuItems = await getMenuItems();
+        await createTable();
+        let menuItems = await getMenuItems();
 
-        // // The application only fetches the menu data once from a remote URL
-        // // and then stores it into a SQLite database.
-        // // After that, every application restart loads the menu from the database
-        // if (!menuItems.length) {
-        //   const menuItems = await fetchData();
-        //   saveMenuItems(menuItems);
-        // }
+        // The application only fetches the menu data once from a remote URL
+        // and then stores it into a SQLite database.
+        // After that, every application restart loads the menu from the database
+        if (!menuItems.length) {
+          menuItems = await fetchData();
+          menuItems = menuItems.menu;
+          saveMenuItems(menuItems);
+        }
 
-        // const sectionListData = getSectionListData(menuItems);
-        // setData(sectionListData);
-        const menuItems = await fetchData();
-        const sectionListData = getSectionListData(menuItems.menu);
-        console.log(typeof(sectionListData))
+        const sectionListData = getSectionListData(menuItems);
         setData(sectionListData);
       } catch (e) {
         // Handle error
@@ -141,7 +137,7 @@ export default function HomeScreen() {
         sections={data}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Item title={item.title} description={item.description} price={item.price}/>
+          <Item title={item.title} description={item.description} price={item.price} image={item.image}/>
         )}
         renderSectionHeader={({ section: { title } }) => (
           <Text style={styles.header}>{title}</Text>
@@ -202,12 +198,6 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
     shadowOpacity: 0,
   },
-  item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-  },
   header: {
     fontSize: 24,
     paddingVertical: 8,
@@ -215,9 +205,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffffff',
     borderBottomColor: '#EDEFEE',
     borderBottomWidth: 2,
-  },
-  title: {
-    fontSize: 20,
-    color: '#333333',
   },
 });

@@ -15,12 +15,13 @@ import {
   filterByQueryAndCategories,
 } from '../database';
 import React, { useEffect, useState} from 'react';
-import { getSectionListData } from "../helper";
+import { getSectionListData, useUpdateEffect } from "../helper";
 import Item from '../components/Item';
+import Filters from '../components/Filters';
 
-const MENU_API = "https://raw.githubusercontent.com/liencis/files-to-change/refs/heads/main/lemon-menu.js"
+const MENU_API = "https://raw.githubusercontent.com/liencis/files-to-change/refs/heads/main/lemon-menu.js";
 
-const sections = ['Appetizers', 'Salads', 'Beverages', 'Mains'];
+const sections = ['Appetizers', 'Salads', 'Beverages', 'Mains', 'Desserts'];
 
 export default function HomeScreen() {
   const [data, setData] = useState([]);
@@ -64,27 +65,27 @@ export default function HomeScreen() {
     })();
   }, []);
 
-  // useUpdateEffect(() => {
-  //   (async () => {
-  //     const activeCategories = sections.filter((s, i) => {
-  //       // If all filters are deselected, all categories are active
-  //       if (filterSelections.every((item) => item === false)) {
-  //         return true;
-  //       }
-  //       return filterSelections[i];
-  //     });
-  //     try {
-  //       const menuItems = await filterByQueryAndCategories(
-  //         query,
-  //         activeCategories
-  //       );
-  //       const sectionListData = getSectionListData(menuItems);
-  //       setData(sectionListData);
-  //     } catch (e) {
-  //       Alert.alert(e.message);
-  //     }
-  //   })();
-  // }, [filterSelections, query]);
+  useUpdateEffect(() => {
+    (async () => {
+      const activeCategories = sections.filter((s, i) => {
+        // If all filters are deselected, all categories are active
+        if (filterSelections.every((item) => item === false)) {
+          return true;
+        }
+        return filterSelections[i];
+      });
+      try {
+        const menuItems = await filterByQueryAndCategories(
+          query,
+          activeCategories
+        );
+        const sectionListData = getSectionListData(menuItems);
+        setData(sectionListData);
+      } catch (e) {
+        Alert.alert(e.message);
+      }
+    })();
+  }, [filterSelections, query]);
 
   // const lookup = useCallback((q) => {
   //   setQuery(q);
@@ -126,12 +127,12 @@ export default function HomeScreen() {
         iconColor="white"
         inputStyle={{ color: 'white' }}
         elevation={0}
-      />
+      /> */}
       <Filters
         selections={filterSelections}
         onChange={handleFiltersChange}
         sections={sections}
-      /> */}
+      />
       <SectionList
         style={styles.sectionList}
         sections={data}

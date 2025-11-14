@@ -119,12 +119,10 @@ export default function ProfileScreen({ navigation }) {
     };
 
     // Not realy loging out more like clearing async storage
-    const logOut = () => {
-        (async () => {
-            try {
-                await AsyncStorage.clear()
-            } catch (e) {};
-        })();
+    const logOut = async () => {
+        try {
+            await AsyncStorage.clear()
+        } catch (e) {};
     };
 
     return (

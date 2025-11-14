@@ -5,6 +5,7 @@ import HomeScreen from "../screens/Home";
 import ProfileScreen from "../screens/Profile";
 import WelcomeScreen from "../screens/WelcomeScreen";
 import UserIcon from "../components/UserIcon";
+import Onboarding from "../screens/Onboarding";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState, useEffect } from 'react';
 
@@ -37,6 +38,7 @@ export default function LogedInNavigator ({ navigation }) {
         />
         <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>
         <Stack.Screen name="Welcome" component={WelcomeScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>
+        <Stack.Screen name="Onboard" component={Onboarding} options={{headerTitle: (props) => <Header {...props} />,}}/>
     </Stack.Navigator>
   );
 };

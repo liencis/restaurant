@@ -14,10 +14,12 @@ import {
   saveMenuItems,
   filterByQueryAndCategories,
 } from '../database';
-import React, { useEffect, useState} from 'react';
+import debounce from 'lodash.debounce';
+import React, { useEffect, useState, useMemo, useCallback} from 'react';
 import { getSectionListData, useUpdateEffect } from "../helper";
 import Item from '../components/Item';
 import Filters from '../components/Filters';
+import { Searchbar } from 'react-native-paper';
 
 const MENU_API = "https://raw.githubusercontent.com/liencis/files-to-change/refs/heads/main/lemon-menu.js";
 
@@ -87,16 +89,16 @@ export default function HomeScreen() {
     })();
   }, [filterSelections, query]);
 
-  // const lookup = useCallback((q) => {
-  //   setQuery(q);
-  // }, []);
+  const lookup = useCallback((q) => {
+    setQuery(q);
+  }, []);
 
-  // const debouncedLookup = useMemo(() => debounce(lookup, 500), [lookup]);
+  const debouncedLookup = useMemo(() => debounce(lookup, 500), [lookup]);
 
-  // const handleSearchChange = (text) => {
-  //   setSearchBarText(text);
-  //   debouncedLookup(text);
-  // };
+  const handleSearchChange = (text) => {
+    setSearchBarText(text);
+    debouncedLookup(text);
+  };
 
   const handleFiltersChange = async (index) => {
     const arrayCopy = [...filterSelections];
@@ -117,17 +119,17 @@ export default function HomeScreen() {
             resizeMode="cover"
           />
         </View>
+        <Searchbar
+          placeholder="Search"
+          placeholderTextColor="white"
+          onChangeText={handleSearchChange}
+          value={searchBarText}
+          style={styles.searchBar}
+          iconColor="white"
+          inputStyle={{ color: 'white' }}
+          elevation={0}
+        />
       </View>
-      {/* <Searchbar
-        placeholder="Search"
-        placeholderTextColor="white"
-        onChangeText={handleSearchChange}
-        value={searchBarText}
-        style={styles.searchBar}
-        iconColor="white"
-        inputStyle={{ color: 'white' }}
-        elevation={0}
-      /> */}
       <Filters
         selections={filterSelections}
         onChange={handleFiltersChange}
@@ -160,13 +162,13 @@ const styles = StyleSheet.create({
   },
   bannerHeader: {
     color: "#F4CE14",
-    fontSize: 56,
+    fontSize: 50,
     fontFamily: "MarkaziText",
     paddingHorizontal: 8,
   },
   bannerSubHeader: {
     color: "#EDEFEE",
-    fontSize: 40,
+    fontSize: 36,
     fontFamily: "MarkaziText",
     paddingHorizontal: 8,
   },
@@ -194,10 +196,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   searchBar: {
-    marginBottom: 24,
+    marginBottom: 5,
+    marginHorizontal: 8,
     backgroundColor: '#495E57',
     shadowRadius: 0,
     shadowOpacity: 0,
+    borderWidth: 0.5,
+    borderColor: '#EDEFEE',
   },
   header: {
     fontSize: 24,

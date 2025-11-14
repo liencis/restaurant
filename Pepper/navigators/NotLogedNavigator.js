@@ -5,6 +5,7 @@ import WelcomeScreen from "../screens/WelcomeScreen";
 import Onboarding from "../screens/Onboarding";
 import HomeScreen from "../screens/Home";
 import ProfileScreen from "../screens/Profile";
+import UserIcon from "../components/UserIcon";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +15,13 @@ export default function NotLogedNavigator({ navigation }) {
         <Stack.Screen name="Welcome" component={WelcomeScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>
         <Stack.Screen name="Onboard" component={Onboarding} options={{headerTitle: (props) => <Header {...props} />,}}/>
         <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>
-        <Stack.Screen name="Home" component={HomeScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>
+        <Stack.Screen name="Home" 
+          component={HomeScreen} 
+          options={ (props) => ({
+            headerTitle: (props) => <Header {...props} />,
+            headerRight: () => <UserIcon imageUri={clientImg} navigation={props.navigation}/>,
+          })}
+        />
     </Stack.Navigator>
   );
 };

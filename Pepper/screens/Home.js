@@ -110,9 +110,11 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <View style={styles.banner}>
         <Text style={styles.bannerHeader}>Little Lemon</Text>
-        <Text style={styles.bannerSubHeader}>Chicago</Text>
         <View style={styles.bannerView}>
-          <Text style={styles.bannerText}>We  are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
+          <View>
+            <Text style={styles.bannerSubHeader}>Chicago</Text>
+            <Text style={styles.bannerText}>We  are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
+          </View>
           <Image
             source={require('../assets/Hero image.png')}
             style={styles.bannerImg}
@@ -178,11 +180,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bannerText: {
-    width: 220,
+    width: 230,
     overflow: "scroll",
     color: "#EDEFEE",
     padding: 8,
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: "Karla-Regular",
   },
   bannerImg: {

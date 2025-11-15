@@ -14,7 +14,6 @@ export default function NotLogedNavigator({ navigation }) {
     <Stack.Navigator initialRouteName='Welcome'>
         <Stack.Screen name="Welcome" component={WelcomeScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>
         <Stack.Screen name="Onboard" component={Onboarding} options={{headerTitle: (props) => <Header {...props} />,}}/>
-        <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>
         <Stack.Screen name="Home" 
           component={HomeScreen} 
           options={ (props) => ({
@@ -22,6 +21,7 @@ export default function NotLogedNavigator({ navigation }) {
             headerRight: () => <UserIcon imageUri={clientImg} navigation={props.navigation}/>,
           })}
         />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>
     </Stack.Navigator>
   );
 };

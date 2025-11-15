@@ -11,12 +11,12 @@ export default function WelcomeScreen({ navigation }) {
         style={{height: 300, width: 300, margin: 40}}
         resizeMode='contain'
       />
-        <Pressable             
+        {/* <Pressable             
             style={styles.button}
             onPress={() => navigation.navigate('Onboard')}
         >
         <Text style={styles.buttonText}>Let's get started!</Text>
-        </Pressable>
+        </Pressable> */}
     </View>
   );
 };

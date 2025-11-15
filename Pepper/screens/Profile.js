@@ -9,12 +9,14 @@ import {
   Image,
   Switch,
 } from 'react-native';
-import { useEffect, useState} from 'react';
+import { useEffect, useState, useContext} from 'react';
 import { validateEmail, validatePhoneNumber } from '../helper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
+import { AuthContext } from '../authContext';
 
 export default function ProfileScreen({ navigation }) {
+    const { signOut } = useContext(AuthContext);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [client, setClient] = useState(
@@ -55,7 +57,8 @@ export default function ProfileScreen({ navigation }) {
                 ...prevClientState, 
                 uriImage: result.assets[0].uri
             }));
-        }
+        };
+        setInfoIsChanged(true);
     };
 
     useEffect(() => {
@@ -96,7 +99,7 @@ export default function ProfileScreen({ navigation }) {
                 await AsyncStorage.setItem('clientPref', JSON.stringify(clientPref));
                 await AsyncStorage.setItem('client', JSON.stringify(client));
                 setInfoIsChanged(false);
-                console.log(clientPref, client);
+                //console.log(clientPref, client);
             } catch (e) {
                 Alert.alert(`Error to save chages in Async storage: ${e}`);
             }
@@ -121,7 +124,7 @@ export default function ProfileScreen({ navigation }) {
     // Not realy loging out more like clearing async storage
     const logOut = async () => {
         try {
-            await AsyncStorage.clear()
+            await AsyncStorage.clear();
         } catch (e) {};
     };
 
@@ -271,7 +274,7 @@ export default function ProfileScreen({ navigation }) {
                     <Pressable style={styles.button} 
                         onPress={() => {
                             logOut;
-                            navigation.navigate("Welcome")
+                            signOut({});
                         }}
                     >
                         <Text style={styles.buttonText}>Log out</Text>

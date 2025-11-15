@@ -7,9 +7,10 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import { useEffect, useState} from 'react';
+import { useEffect, useState, useContext} from 'react';
 import { validateEmail } from '../helper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from '../authContext';
 
 export default function Onboarding({ navigation }) {
     const [name, setName] = useState('');
@@ -23,6 +24,7 @@ export default function Onboarding({ navigation }) {
             uriImage: "",
         }
     );
+    const { signUp } = useContext(AuthContext);
     const isEmailValid = validateEmail(email);
 
     useEffect(() => {
@@ -67,7 +69,8 @@ export default function Onboarding({ navigation }) {
                         style={(isEmailValid && name) ? styles.button : styles.buttonDisabeled}
                         onPress={() => {
                             setClient((prevState) => ({...prevState, name: name, email: email}));
-                            navigation.navigate('Home')
+                            signUp({ name, email });
+                            //navigation.navigate('Home')
                         }}
                     >
                     <Text style={styles.buttonText}>Next</Text>

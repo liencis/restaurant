@@ -13,6 +13,7 @@ const Stack = createNativeStackNavigator();
 
 export default function LogedInNavigator ({ navigation }) {
   const [clientImg, setClientImg] = useState("");
+  const [clientName, setClientName] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -20,7 +21,8 @@ export default function LogedInNavigator ({ navigation }) {
             const customers = await AsyncStorage.getItem('client');
             if (customers !== null) {
               const client = JSON.parse(customers);
-              setClientImg(client.uriImage)
+              setClientImg(client.uriImage);
+              setClientName(client.name)
             }
           } catch (e) {}
     })();
@@ -33,7 +35,11 @@ export default function LogedInNavigator ({ navigation }) {
           component={HomeScreen} 
           options={ (props) => ({
             headerTitle: (props) => <Header {...props} />,
-            headerRight: () => <UserIcon imageUri={clientImg} navigation={props.navigation}/>,
+            headerRight: () => <UserIcon 
+              imageUri={clientImg} 
+              navigation={props.navigation}
+              name={clientName}
+              />,
           })}
         />
         <Stack.Screen name="Profile" component={ProfileScreen} options={{headerTitle: (props) => <Header {...props} />,}}/>
